@@ -274,7 +274,13 @@ class PerceiverSelfAttention(nn.Module):
             attention_scores = attention_scores + attention_mask
 
         # Normalize the attention scores to probabilities.
-        attention_probs = nn.Softmax(dim=-1)(attention_scores)
+        #attention_probs = nn.Softmax(dim=-1)(attention_scores)
+        if is_cross_attention:
+            # If cross attention, apply softmax over the latents instead of sequence length
+            attention_probs = nn.Softmax(dim=-2)(attention_scores)
+            attention_probs = attention_probs/attention_probs.sum(dim=-1).unsqueeze(-1)
+        else:
+            attention_probs = nn.Softmax(dim=-1)(attention_scores)
 
         # This is actually dropping out entire tokens to attend to, which might
         # seem a bit unusual, but is taken from the original Transformer paper.
