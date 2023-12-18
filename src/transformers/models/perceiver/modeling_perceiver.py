@@ -273,8 +273,7 @@ class PerceiverSelfAttention(nn.Module):
             # Apply the attention mask (precomputed for all layers in PerceiverModel forward() function)
             attention_scores = attention_scores + attention_mask
 
-        # Normalize the attention scores to probabilities.
-        #attention_probs = nn.Softmax(dim=-1)(attention_scores)
+        ## Normalize the attention scores to probabilities.
         if is_cross_attention:
             # If cross attention, apply softmax over the latents instead of sequence length
             attention_probs = nn.Softmax(dim=-2)(attention_scores)
